@@ -1,10 +1,12 @@
 # UPS - Uncommon Printing System
 
-I wrote the Uncommon Printing System a long time ago to replace a proprietary printing system called NiceWatch by NiceLabel. 
-Don't get me wrong, Nice Label Designer is still the best WYSIWYG Label Editor on Earth, but NiceWatch is slow and unstable. 
+I wrote the [Uncommon Printing System](https://simonwaldherr.de/go/ups) a long time ago to replace a proprietary printing system called NiceWatch by [NiceLabel](https://www.nicelabel.com). 
+Don't get me wrong, [Nice Label Designer](https://www.nicelabel.com/design-and-print) is still the best WYSIWYG Label Editor on Earth, but NiceWatch is slow and unstable. 
 The UPS is programmed to support Label Templates designed with NiceLabel Designer and print them on ZPL compatible printers. 
 
 I use UPS in a customized version to print up to 10000 labels daily.
+UPS can also do a lot more with ease, but in the current case of application it is not needed.
+You can even run UPS on a Raspberry Pi.
 
 Currently I only print on Zebra ZM400, Zebra ZT410, Zebra QL 420 (plus) and Zebra QLn 420, but I plan to extend the UPS to support non ZPL printers as well.
 
@@ -16,6 +18,7 @@ to test the application you can simply follow these steps:
 1. ```ups &```
 1. ```nc -l 9100 > zpl &```
 1. ```cat xmlreq.xml | nc localhost 30000```
+1. ```kill -9 $(pidof ups)```
 
 ## Why
 
