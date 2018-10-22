@@ -23,7 +23,17 @@ to test the application you can simply follow these steps:
 ## Why
 
 Why what? Why I wrote the application? Because I did not want to bother anymore with an unstable proprietary software!
-Why I made some choices the way I made them? Mostly there is also a reasonable cause - you want an example? There is a function called ```cdatafy``` which adds ```CDATA```-sections to the XML-string. You may ask why on earth someone whould need such a function. Because many SAP developers don't know anything about XML in general and XML marshalling in specific, so they just concatenate strings and as result they create invalid XMLs. It seems like the favorite word of most SAP consultants is standard, but when it comes to actual W3C, WHATWG, IETF, ISO, … standards, they do not care.
+Why I made some choices the way I made them? Mostly there is also a reasonable cause - you want an example? 
+There is a function called ```cdatafy``` which adds ```CDATA```-sections to the XML-string. 
+You may ask why on earth someone whould need such a function. 
+Because many SAP developers don't know anything about XML in general and XML marshalling in specific, 
+so they just concatenate strings and as result they create invalid XMLs. 
+It seems like the favorite word of most SAP consultants is standard, 
+but when it comes to actual W3C, WHATWG, IETF, ISO, … standards, they do not care.
+
+## Is it any good?
+
+[Yes](https://news.ycombinator.com/item?id=3067434)
 
 ## License
 

@@ -17,6 +17,7 @@ import (
 	"simonwaldherr.de/go/golibs/cache"
 	xfile "simonwaldherr.de/go/golibs/file"
 	"simonwaldherr.de/go/golibs/regex"
+	"simonwaldherr.de/go/zplgfa"
 	"strings"
 	"time"
 )
@@ -401,6 +402,56 @@ func cdatafy(xml string, ele ...string) string {
 	return xml
 }
 
+func base64decode(s string) string {
+	data, err := base64.StdEncoding.DecodeString(s)
+	if err == nil {
+		return data
+	}
+	return ""
+}
+
+func isPicture(s string) bool {
+	fileExtension := strings.ToLower(filepath.Ext(s))
+	if fileExtension == ".jpg" || fileExtension == ".jpeg" || fileExtension == ".png" {
+		return true
+	}
+	return false
+}
+
+func convertPictureToZPL(filename string) (string, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		log.Printf("Warning: could not open the file: %s\n", err)
+		return "", err
+	}
+
+	defer file.Close()
+
+	// load image head information
+	config, format, err := image.DecodeConfig(file)
+	if err != nil {
+		log.Printf("Warning: image not compatible, format: %s, config: %v, error: %s\n", format, config, err)
+		return "", err
+	}
+
+	// reset file pointer to the beginning of the file
+	file.Seek(0, 0)
+
+	// load and decode image
+	img, _, err := image.Decode(file)
+	if err != nil {
+		log.Printf("Warning: could not decode the file, %s\n", err)
+		return "", err
+	}
+
+	// flatten image
+	flat := zplgfa.FlattenImage(img)
+
+	// convert image to zpl compatible type
+	gfimg := zplgfa.ConvertToZPL(flat, zplgfa.CompressedASCII)
+	return gfimg, nil
+}
+
 func PrintMessages() {
 	var rtype string
 
@@ -430,9 +481,16 @@ func PrintMessages() {
 							fmt.Printf("printing %s labels\n", q.Head.Count)
 
 							if len(q.Head.Printer) != 0 {
+								var base64decoded string
 								printertype := PrinterType(q.Head.Printer)
+								zplPrintable := isZPLprintable(q.Head.Label)
+								labelIsPicture := isPicture(q.Head.Label)
 								printerUnknown := true
 								peelOff := false
+
+								if !zplPrintable {
+									base64decoded = base64decode(q.Head.Label)
+								}
 
 								if _, ok := Printer.Devs[q.Head.Printer]; ok {
 									printerUnknown = false
@@ -441,38 +499,44 @@ func PrintMessages() {
 									Warning.Printf("couldn't found printer %#v in printer table.\n", q.Head.Printer)
 								}
 
-								fmt.Printf("printerUnknown: %v, isZPLprintable: %v\n", printerUnknown, isZPLprintable(q.Head.Label))
+								fmt.Printf("printerUnknown: %v, isZPLprintable: %v\n", printerUnknown, zplPrintable)
 
-								if !printerUnknown && isZPLprintable(q.Head.Label) {
+								if !printerUnknown && (zplPrintable || labelIsPicture || base64decoded != "") {
 									var tmpl string
 
-									tmpl = Ltemplate[q.Head.Label]
+									if zplPrintable {
+										tmpl = Ltemplate[q.Head.Label]
+									} else if base64decoded != "" {
+										tmpl = base64decoded
+									}
 
-									for fieldName, fieldValue := range q.Data.Map {
+									if tmpl != "" {
+										for fieldName, fieldValue := range q.Data.Map {
 
-										fieldValue = strings.Replace(fieldValue, "\\", "\\1F", -1)
+											fieldValue = strings.Replace(fieldValue, "\\", "\\1F", -1)
 
-										for key, encoded := range sonderzeichen {
-											fieldValue = strings.Replace(fieldValue, key, encoded, -1)
+											for key, encoded := range sonderzeichen {
+												fieldValue = strings.Replace(fieldValue, key, encoded, -1)
+											}
+
+											tmpl = strings.Replace(tmpl, "$"+fieldName+"$", fieldValue, -1)
 										}
 
-										tmpl = strings.Replace(tmpl, "$"+fieldName+"$", fieldValue, -1)
+										tmpl = strings.Replace(tmpl, "$DATE$", time.Now().Format("2006-01-02"), -1)
+										tmpl = strings.Replace(tmpl, "$TIME$", time.Now().Format("15:04:05"), -1)
+										tmpl = strings.Replace(tmpl, "$PRINTER$", q.Head.Printer, -1)
+										tmpl = strings.Replace(tmpl, "^MTT", "^MTD", -1)
+
+										if peelOff {
+											tmpl = strings.Replace(tmpl, "^MMT", "^MMK", -1)
+										} else {
+											tmpl = strings.Replace(tmpl, "^MMP", "^MMT", -1)
+											tmpl = strings.Replace(tmpl, "^MMK", "^MMT", -1)
+										}
+										tmpl, _ = regex.ReplaceAllString(tmpl, "\\^PR\\d+,\\d+", "^PR12,12")
+									} else if labelIsPicture {
+										tmpl, err = convertPictureToZPL(q.Head.Label)
 									}
-
-									tmpl = strings.Replace(tmpl, "$DATE$", time.Now().Format("2006-01-02"), -1)
-									tmpl = strings.Replace(tmpl, "$TIME$", time.Now().Format("15:04:05"), -1)
-									tmpl = strings.Replace(tmpl, "$PRINTER$", q.Head.Printer, -1)
-									tmpl = strings.Replace(tmpl, "^MTT", "^MTD", -1)
-
-									if peelOff {
-										tmpl = strings.Replace(tmpl, "^MMT", "^MMK", -1)
-									} else {
-										tmpl = strings.Replace(tmpl, "^MMP", "^MMT", -1)
-										tmpl = strings.Replace(tmpl, "^MMK", "^MMT", -1)
-									}
-									tmpl, _ = regex.ReplaceAllString(tmpl, "\\^PR\\d+,\\d+", "^PR12,12")
-
-									fmt.Printf("sending label to printer %s: \n%s\n", q.Head.Printer, tmpl)
 
 									if q.Head.Count == "1" {
 										go sendLabelToZebra(Printer.Devs[q.Head.Printer].IP, printertype, tmpl, 3)
