@@ -2,10 +2,15 @@ package ups
 
 import (
 	buffer "bufio"
+	"encoding/base64"
 	"encoding/json"
 	_ "expvar"
 	"flag"
 	"fmt"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	fs "io/ioutil"
 	"log"
@@ -405,7 +410,7 @@ func cdatafy(xml string, ele ...string) string {
 func base64decode(s string) string {
 	data, err := base64.StdEncoding.DecodeString(s)
 	if err == nil {
-		return data
+		return string(data)
 	}
 	return ""
 }
@@ -453,8 +458,6 @@ func convertPictureToZPL(filename string) (string, error) {
 }
 
 func PrintMessages() {
-	var rtype string
-
 	for {
 		func() {
 			defer func() {
@@ -535,16 +538,18 @@ func PrintMessages() {
 										}
 										tmpl, _ = regex.ReplaceAllString(tmpl, "\\^PR\\d+,\\d+", "^PR12,12")
 									} else if labelIsPicture {
-										tmpl, err = convertPictureToZPL(q.Head.Label)
+										tmpl, _ = convertPictureToZPL(q.Head.Label)
 									}
 
-									if q.Head.Count == "1" {
-										go sendLabelToZebra(Printer.Devs[q.Head.Printer].IP, printertype, tmpl, 3)
-									} else {
-										var ic int64
-										ici := as.Int(q.Head.Count)
-										for ic = 0; ic < ici; ic++ {
+									if tmpl != "" {
+										if q.Head.Count == "1" {
 											go sendLabelToZebra(Printer.Devs[q.Head.Printer].IP, printertype, tmpl, 3)
+										} else {
+											var ic int64
+											ici := as.Int(q.Head.Count)
+											for ic = 0; ic < ici; ic++ {
+												go sendLabelToZebra(Printer.Devs[q.Head.Printer].IP, printertype, tmpl, 3)
+											}
 										}
 									}
 								}
@@ -556,8 +561,6 @@ func PrintMessages() {
 									msga := "Etikett für " + q.Head.Printer + " (" + Printer.Devs[q.Head.Printer].IP + ") im Format " + q.Head.Label
 									Hub.messages <- LogMsg{Date: as.String(time.Now()), Str: msga, Msgtype: "label", Dst: q.Head.Printer, Ip: Printer.Devs[q.Head.Printer].IP, Label: q.Head.Label, Weight: ""}
 								}
-
-								rtype = "POST"
 							}
 						}
 					}

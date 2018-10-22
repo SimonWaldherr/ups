@@ -28,7 +28,7 @@ func HttpPostRequest(url, msgbody string) (string, error) {
 	}()
 	if rsp.StatusCode == 200 {
 		bodyBytes, err := fs.ReadAll(rsp.Body)
-		return fmt.Sprint("%v", bodyBytes), err
+		return fmt.Sprintf("%v", bodyBytes), err
 	} else if err != nil {
 		return "", err
 	} else {
