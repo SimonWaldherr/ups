@@ -4,6 +4,14 @@ I wrote the [Uncommon Printing System](https://simonwaldherr.de/go/ups) a long t
 Don't get me wrong, [Nice Label Designer](https://www.nicelabel.com/design-and-print) is still the best WYSIWYG Label Editor on Earth, but NiceWatch is slow and unstable. 
 The UPS is programmed to support Label Templates designed with NiceLabel Designer and print them on ZPL compatible printers. 
 
+This repository contains a refactored version of **UPS**. It only contains general purpose features, features like:
+
+* handling invalid XML-Files from SAP systems
+* reload missing data in XML-Files from SAP systems
+* save log-data to BI (business intelligence) system
+* transfer material master data to a sub-system
+* load printer data from a SAP database table
+
 I use UPS in a customized version to print up to 10000 labels daily.
 UPS can also do a lot more with ease, but in the current case of application it is not needed.
 You can even run UPS on a Raspberry Pi.
@@ -22,10 +30,13 @@ to test the application you can simply follow these steps:
 
 ## Why
 
-Why what? Why I wrote the application? Because I did not want to bother anymore with an unstable proprietary software!
+Why what? Why I wrote the application? Because I did not want to bother anymore with an unstable proprietary software! 
+I wasted several hours a week managing the NiceWatch system and keeping it running. 
+I had much better things to do and that's why I wrote UPS.  
+
 Why I made some choices the way I made them? Mostly there is also a reasonable cause - you want an example? 
 There is a function called ```cdatafy``` which adds ```CDATA```-sections to the XML-string. 
-You may ask why on earth someone whould need such a function. 
+You may ask why on earth someone would need such a function. 
 Because many SAP developers don't know anything about XML in general and XML marshalling in specific, 
 so they just concatenate strings and as result they create invalid XMLs. 
 It seems like the favorite word of most SAP consultants is standard, 

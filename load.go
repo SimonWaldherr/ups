@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"simonwaldherr.de/go/golibs/as"
-	xfile "simonwaldherr.de/go/golibs/file"
+	"simonwaldherr.de/go/golibs/file"
 	"strings"
 )
 
@@ -75,12 +75,12 @@ func GetHead(data map[int][]string) map[string]int {
 func ParseLabels(labeldir string) ([]string, map[string]string) {
 	var labelsLocal []string
 	var ltemplateLocal = make(map[string]string)
-	labelsLocal, _ = xfile.ReadDir(filepath.Join(homedir, labeldir))
+	labelsLocal, _ = file.ReadDir(filepath.Join(homedir, labeldir))
 	fmt.Println("###### Labels ######")
 	for _, name := range labelsLocal {
 		if strings.Contains(name, ".200zpl") || strings.Contains(name, ".300zpl") || strings.Contains(name, ".zpl") {
 			fmt.Printf("* %v\n", name)
-			str, _ := xfile.Read(filepath.Join(homedir, labeldir, name))
+			str, _ := file.Read(filepath.Join(homedir, labeldir, name))
 			name = normalizeLabelName(name)
 			ltemplateLocal[name] = str
 		}

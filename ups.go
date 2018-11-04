@@ -1,7 +1,7 @@
 package ups
 
 import (
-	buffer "bufio"
+	"bufio"
 	"encoding/base64"
 	"encoding/json"
 	_ "expvar"
@@ -12,7 +12,7 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 	"io"
-	fs "io/ioutil"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"simonwaldherr.de/go/golibs/as"
 	"simonwaldherr.de/go/golibs/cache"
-	xfile "simonwaldherr.de/go/golibs/file"
+	"simonwaldherr.de/go/golibs/file"
 	"simonwaldherr.de/go/golibs/regex"
 	"simonwaldherr.de/go/zplgfa"
 	"strings"
@@ -238,7 +238,7 @@ func getInfoFromZebra(ip string, retry int) string {
 				return getInfoFromZebra(ip, retry-1)
 			}
 		}
-		message, err := buffer.NewReader(conn).ReadString('\n')
+		message, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
 			return ""
 		}
@@ -292,7 +292,7 @@ func handleTCPConnection(c net.Conn) {
 }
 
 func handleHTTPConnection(rw http.ResponseWriter, req *http.Request) {
-	postdata, err := fs.ReadAll(req.Body)
+	postdata, err := ioutil.ReadAll(req.Body)
 	if err == nil {
 		str := strings.TrimSpace(string(postdata))
 		if str != "" {
@@ -317,7 +317,7 @@ func handleHTTPConnection(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Set("Server", "NicerWatch 0.998")
 		rw.Header().Set("Content-Type", "text/html; charset=UTF-8")
 		rw.WriteHeader(200)
-		str, _ := xfile.Read(filepath.Join(homedir, "index.html"))
+		str, _ := file.Read(filepath.Join(homedir, "index.html"))
 		fmt.Fprintf(rw, str)
 
 		f.Flush()

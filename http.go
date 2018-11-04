@@ -3,7 +3,7 @@ package ups
 import (
 	"bytes"
 	"fmt"
-	fs "io/ioutil"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 )
@@ -27,7 +27,7 @@ func HttpPostRequest(url, msgbody string) (string, error) {
 		rsp.Body.Close()
 	}()
 	if rsp.StatusCode == 200 {
-		bodyBytes, err := fs.ReadAll(rsp.Body)
+		bodyBytes, err := ioutil.ReadAll(rsp.Body)
 		return fmt.Sprintf("%v", bodyBytes), err
 	} else if err != nil {
 		return "", err
