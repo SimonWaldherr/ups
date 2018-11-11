@@ -25,6 +25,7 @@ func (devices *Devices) Set(Mandant, Name, IP, Info string, DPI int, PeelOff boo
 		Mandt: Mandant,
 		Name:  Name,
 		IP:    IP,
+		Port:  Port,
 		Info:  Info,
 		DPI:   DPI,
 		Peel:  PeelOff,
@@ -98,11 +99,12 @@ func LoadPrinter(filename string) *Devices {
 		mndt := as.String(data[k["mndt"]])
 		name := as.String(data[k["name"]])
 		ip := as.String(data[k["ip"]])
+		port := as.String(data[k["port"]])
 		info := as.String(data[k["info"]])
 		dpi := int(as.Int(data[k["dpi"]]))
 		peel := as.Bool(data[k["peel"]])
 		fmt.Printf("* %v\n", name)
-		dev.Set(mndt, name, ip, info, dpi, peel)
+		dev.Set(mndt, name, ip, port, info, dpi, peel)
 	}
 
 	fmt.Println()

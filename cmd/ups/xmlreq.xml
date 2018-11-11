@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><Variables>
     <Head>
         <Label>example.zpl</Label>
-        <Printer>PRNWA100</Printer>
+        <Printer>PRNTEST100</Printer>
         <Count>1</Count>
     </Head>
     <Data>

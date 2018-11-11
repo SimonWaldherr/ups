@@ -19,6 +19,7 @@ type Device struct {
 	Mandt string
 	Name  string
 	IP    string
+	Port  string
 	Info  string
 	DPI   int
 	Peel  bool

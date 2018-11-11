@@ -1,3 +1,3 @@
-mndt;name;ip;info;dpi;peel
-100;PRNWA132;192.168.178.132;Warenausgang;300;true
-100;PRNTEST100;127.0.0.1;Test;300;false
+mndt;name;ip;port;info;dpi;peel
+100;PRNWA132;192.168.178.132;9100;Warenausgang;300;true
+100;PRNTEST100;127.0.0.1;9100;Test;300;false

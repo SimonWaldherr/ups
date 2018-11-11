@@ -32,8 +32,6 @@ var cacheMAT *cache.Cache
 var cacheTXT *cache.Cache
 
 var portWaage string = ":56429"
-var portMobilDrucker string = ":6101"
-var portZebraDrucker string = ":9100"
 
 var Hub = &Connections{
 	clients:      make(map[chan LogMsg]bool),
@@ -135,15 +133,9 @@ func toUtf8(iso8859 []byte) string {
 	return string(buf)
 }
 
-func sendLabelToZebra(ip, printertype, zpl string, retry int) bool {
+func sendLabelToZebra(ip, port, printertype, zpl string, retry int) bool {
 	var servAddr string
-	if printertype == "DRU" {
-		servAddr = ip + portMobilDrucker
-		zpl = strings.Replace(zpl, ".zpl", ".200zpl", -1)
-	} else {
-		servAddr = ip + portZebraDrucker
-		zpl = strings.Replace(zpl, ".zpl", ".300zpl", -1)
-	}
+	servAddr = ip + ":" + port
 
 	Info.Println(servAddr)
 
@@ -175,14 +167,10 @@ func sendLabelToZebra(ip, printertype, zpl string, retry int) bool {
 	return false
 }
 
-func sendDataToZebra(ip, printertype, str string) bool {
+func sendDataToZebra(ip, port, printertype, str string) bool {
 	var servAddr string
 
-	if printertype == "DRU" {
-		servAddr = ip + portMobilDrucker
-	} else {
-		servAddr = ip + portZebraDrucker
-	}
+	servAddr = ip + ":" + port
 
 	Info.Println(servAddr)
 
@@ -201,25 +189,25 @@ func sendDataToZebra(ip, printertype, str string) bool {
 	return false
 }
 
-func sendFeedCmdToZebra(ip, printertype string) bool {
-	return sendDataToZebra(ip, printertype, "^xa^aa^fd ^fs^xz")
+func sendFeedCmdToZebra(ip, port, printertype string) bool {
+	return sendDataToZebra(ip, port, printertype, "^xa^aa^fd ^fs^xz")
 }
 
-func sendCalibCmdToZebra(ip, printertype string) bool {
-	return sendDataToZebra(ip, printertype, "~jc^xa^jus^xz")
+func sendCalibCmdToZebra(ip, port, printertype string) bool {
+	return sendDataToZebra(ip, port, printertype, "~jc^xa^jus^xz")
 }
 
 func sendCmdToZebra(data, printername string) bool {
 	if _, ok := Printer.Devs[printername]; ok {
 		printertype := PrinterType(printername)
-		return sendDataToZebra(Printer.Devs[printername].IP, printertype, data)
+		return sendDataToZebra(Printer.Devs[printername].IP, Printer.Devs[printername].Port, printertype, data)
 	}
 	return false
 }
 
-func getInfoFromZebra(ip string, retry int) string {
+func getInfoFromZebra(ip, port string, retry int) string {
 	zpl := "~HS"
-	servAddr := ip + portZebraDrucker
+	servAddr := ip + ":" + port
 	Info.Println(servAddr)
 
 	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
