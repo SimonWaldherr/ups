@@ -2,13 +2,13 @@ package ups
 
 import (
 	"bufio"
-	"encoding/csv"
 	"encoding/xml"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"simonwaldherr.de/go/golibs/as"
+	"simonwaldherr.de/go/golibs/csv"
 	"simonwaldherr.de/go/golibs/file"
 	"strings"
 )
@@ -32,47 +32,6 @@ func (devices *Devices) Set(Mandant, Name, IP, Info string, DPI int, PeelOff boo
 	}
 }
 
-func LoadCSVfromFile(filename string) (map[int][]string, map[string]int) {
-	fp, _ := os.Open(filename)
-	return loadCSV(bufio.NewReader(fp))
-}
-
-func LoadCSVfromString(csv string) (map[int][]string, map[string]int) {
-	fp := strings.NewReader(csv)
-	return loadCSV(fp)
-}
-
-func loadCSV(reader io.Reader) (map[int][]string, map[string]int) {
-	var row int
-	var head = map[int][]string{}
-	var data = map[int][]string{}
-
-	csvReader := csv.NewReader(reader)
-	csvReader.Comma = ';'
-	for {
-		record, err := csvReader.Read()
-		if err == io.EOF {
-			break
-		}
-
-		if row == 0 {
-			head[row] = record
-		} else {
-			data[row] = record
-		}
-		row++
-	}
-	return data, GetHead(head)
-}
-
-func GetHead(data map[int][]string) map[string]int {
-	head := make(map[string]int, len(data[0]))
-	for pos, name := range data[0] {
-		head[name] = pos
-	}
-	return head
-}
-
 func ParseLabels(labeldir string) ([]string, map[string]string) {
 	var labelsLocal []string
 	var ltemplateLocal = make(map[string]string)
@@ -92,10 +51,10 @@ func ParseLabels(labeldir string) ([]string, map[string]string) {
 
 func LoadPrinter(filename string) *Devices {
 	dev := CreateDeviceMap()
-	csv, k := LoadCSVfromFile(filename)
+	csvdata, k := csv.LoadCSVfromFile(filename)
 	fmt.Println("###### Printer ######")
 
-	for _, data := range csv {
+	for _, data := range csvdata {
 		mndt := as.String(data[k["mndt"]])
 		name := as.String(data[k["name"]])
 		ip := as.String(data[k["ip"]])
