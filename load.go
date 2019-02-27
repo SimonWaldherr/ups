@@ -1,11 +1,8 @@
 package ups
 
 import (
-	"bufio"
 	"encoding/xml"
 	"fmt"
-	"io"
-	"os"
 	"path/filepath"
 	"simonwaldherr.de/go/golibs/as"
 	"simonwaldherr.de/go/golibs/csv"
@@ -20,7 +17,7 @@ func CreateDeviceMap() *Devices {
 	}
 }
 
-func (devices *Devices) Set(Mandant, Name, IP, Info string, DPI int, PeelOff bool) {
+func (devices *Devices) Set(Mandant, Name, IP, Port, Info string, DPI int, PeelOff bool) {
 	devices.Devs[Name] = &Device{
 		Mandt: Mandant,
 		Name:  Name,

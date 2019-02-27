@@ -151,7 +151,7 @@ func sendLabelToZebra(ip, port, printertype, zpl string, retry int) bool {
 				Warning.Printf("pos: 1 ip: %v retry: %v err: %v", ip, retry, err)
 
 				time.Sleep(retrytime)
-				return sendLabelToZebra(ip, printertype, zpl, retry-1)
+				return sendLabelToZebra(ip, port, printertype, zpl, retry-1)
 			}
 		}
 		return true
@@ -162,7 +162,7 @@ func sendLabelToZebra(ip, port, printertype, zpl string, retry int) bool {
 		Warning.Printf("pos: 2 ip: %v retry: %v err: %v", ip, retry, err)
 
 		time.Sleep(retrytime)
-		return sendLabelToZebra(ip, printertype, zpl, retry-1)
+		return sendLabelToZebra(ip, port, printertype, zpl, retry-1)
 	}
 	return false
 }
@@ -223,7 +223,7 @@ func getInfoFromZebra(ip, port string, retry int) string {
 				Warning.Printf("pos: 1 ip: %v retry: %v err: %v", ip, retry, err)
 
 				time.Sleep(retrytime)
-				return getInfoFromZebra(ip, retry-1)
+				return getInfoFromZebra(ip, port, retry-1)
 			}
 		}
 		message, err := bufio.NewReader(conn).ReadString('\n')
@@ -238,7 +238,7 @@ func getInfoFromZebra(ip, port string, retry int) string {
 		Warning.Printf("pos: 2 ip: %v retry: %v err: %v", ip, retry, err)
 
 		time.Sleep(retrytime)
-		return getInfoFromZebra(ip, retry-1)
+		return getInfoFromZebra(ip, port, retry-1)
 	}
 	return ""
 }
@@ -531,12 +531,12 @@ func PrintMessages() {
 
 									if tmpl != "" {
 										if q.Head.Count == "1" {
-											go sendLabelToZebra(Printer.Devs[q.Head.Printer].IP, printertype, tmpl, 3)
+											go sendLabelToZebra(Printer.Devs[q.Head.Printer].IP, Printer.Devs[q.Head.Printer].Port, printertype, tmpl, 3)
 										} else {
 											var ic int64
 											ici := as.Int(q.Head.Count)
 											for ic = 0; ic < ici; ic++ {
-												go sendLabelToZebra(Printer.Devs[q.Head.Printer].IP, printertype, tmpl, 3)
+												go sendLabelToZebra(Printer.Devs[q.Head.Printer].IP, Printer.Devs[q.Head.Printer].Port, printertype, tmpl, 3)
 											}
 										}
 									}
