@@ -1,6 +1,6 @@
 # UPS - Uncommon Printing System
 
-[![Build Status](https://travis-ci.org/SimonWaldherr/ups.svg?branch=master)](https://travis-ci.org/SimonWaldherr/ups)  
+[![Build Status](https://travis-ci.org/SimonWaldherr/ups.svg?branch=master)](https://travis-ci.org/SimonWaldherr/ups) 
 [![GoDoc](https://godoc.org/github.com/SimonWaldherr/ups?status.svg)](https://godoc.org/github.com/SimonWaldherr/ups)  
 
 I wrote the [Uncommon Printing System](https://simonwaldherr.de/go/ups) a long time ago to replace a proprietary printing system called NiceWatch by [NiceLabel](https://www.nicelabel.com). 
@@ -51,4 +51,4 @@ but when it comes to actual W3C, WHATWG, IETF, ISO, … standards, they do not c
 
 ## License
 
-I have not decided yet
+[MIT](https://github.com/SimonWaldherr/ups/blob/master/LICENSE)
