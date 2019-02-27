@@ -1,15 +1,10 @@
-sudo: false
 language: go
-env:
-  - GO111MODULE=on
+
 go:
   - 1.11.x
   - tip
-git:
-depth: 1
-install: true
 
-before_script:
-  - go install -mod vendor github.com/golangci/golangci-lint/cmd/golangci-lint
 script:
+  - go get simonwaldherr.de/go/ups/cmd/ups
+  - go fmt simonwaldherr.de/go/ups/cmd/ups
   - go build simonwaldherr.de/go/ups/cmd/ups

@@ -1,5 +1,8 @@
 # UPS - Uncommon Printing System
 
+[![Build Status](https://travis-ci.org/SimonWaldherr/ups.svg?branch=master)](https://travis-ci.org/SimonWaldherr/ups)  
+[![GoDoc](https://godoc.org/github.com/SimonWaldherr/ups?status.svg)](https://godoc.org/github.com/SimonWaldherr/ups)  
+
 I wrote the [Uncommon Printing System](https://simonwaldherr.de/go/ups) a long time ago to replace a proprietary printing system called NiceWatch by [NiceLabel](https://www.nicelabel.com). 
 Don't get me wrong, [Nice Label Designer](https://www.nicelabel.com/design-and-print) is still the best WYSIWYG Label Editor on Earth, but NiceWatch is slow and unstable. 
 The UPS is programmed to support Label Templates designed with NiceLabel Designer and print them on ZPL compatible printers. 
