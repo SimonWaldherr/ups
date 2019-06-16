@@ -1,5 +1,7 @@
 # UPS - Uncommon Printing System
 
+*a simple printing system for labels*  
+
 [![Build Status](https://travis-ci.org/SimonWaldherr/ups.svg?branch=master)](https://travis-ci.org/SimonWaldherr/ups) 
 [![GoDoc](https://godoc.org/github.com/SimonWaldherr/ups?status.svg)](https://godoc.org/github.com/SimonWaldherr/ups)  
 
@@ -11,9 +13,11 @@ This repository contains a refactored version of **UPS**. It only contains gener
 
 * handling invalid XML-Files from SAP systems
 * reload missing data in XML-Files from SAP systems
-* save log-data to BI (business intelligence) system
+* save log-data to a BI (business intelligence) system
 * transfer material master data to a sub-system
 * load printer data from a SAP database table
+
+are not included.
 
 I use UPS in a customized version to print up to 10000 labels daily.
 UPS can also do a lot more with ease, but in the current case of application it is not needed.
@@ -44,6 +48,11 @@ Because many SAP developers don't know anything about XML in general and XML mar
 so they just concatenate strings and as result they create invalid XMLs. 
 It seems like the favorite word of most SAP consultants is standard, 
 but when it comes to actual W3C, WHATWG, IETF, ISO, … standards, they do not care.
+
+## But
+
+If you only need a tool to print images on a Label-printer you can use this tool:
+[![SimonWaldherr/zplgfa - GitHub](https://gh-card.dev/repos/SimonWaldherr/zplgfa.svg?fullname)](https://github.com/SimonWaldherr/zplgfa)  
 
 ## Is it any good?
 
