@@ -351,10 +351,14 @@ func handleHTTPConnection(rw http.ResponseWriter, req *http.Request) {
 	rw.Header().Set("Cache-Control", "no-cache")
 	rw.Header().Set("Connection", "keep-alive")
 
+	tickerDuration := time.Second * 60
+	ticker := time.NewTimer(tickerDuration)
 	for i := 0; i < 1440; {
 		fmt.Println("foo", i)
+		ticker.Reset(tickerDuration)
 		select {
 		case msg := <-messageChannel:
+			ticker.Stop()
 			jsonData, _ := json.Marshal(msg)
 			str := string(jsonData)
 			str = fmt.Sprintf("data: {\"str\": %s,\"time\": \"%v\",\"x\": \"\"}\n\n", str, time.Now())
@@ -364,7 +368,7 @@ func handleHTTPConnection(rw http.ResponseWriter, req *http.Request) {
 				fmt.Fprint(rw, str)
 			}
 			f.Flush()
-		case <-time.After(time.Second * 60):
+		case <-ticker.C:
 			if req.URL.Path == "/events/sse" {
 				fmt.Fprintf(rw, "data: {\"str\": \"No Data\"}\n\n")
 			} else if req.URL.Path == "/events/lp" {
@@ -373,6 +377,7 @@ func handleHTTPConnection(rw http.ResponseWriter, req *http.Request) {
 			f.Flush()
 			i++
 		case <-notify:
+			ticker.Stop()
 			f.Flush()
 			i = 1440
 			Hub.removeClient <- messageChannel

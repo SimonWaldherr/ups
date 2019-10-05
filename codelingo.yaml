@@ -1,0 +1,2 @@
+tenets:
+  - import: codelingo/go/ticker-in-for-select
