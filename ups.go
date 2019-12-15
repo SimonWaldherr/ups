@@ -140,6 +140,7 @@ func sendLabelToZebra(ip, port, printertype, zpl string, retry int) bool {
 	Info.Println(servAddr)
 
 	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
+	Warning.Println(err)
 	conn, err := net.DialTCP("tcp4", nil, tcpAddr)
 	if err == nil {
 		defer conn.Close()
@@ -175,6 +176,7 @@ func sendDataToZebra(ip, port, printertype, str string) bool {
 	Info.Println(servAddr)
 
 	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
+	Warning.Println(err)
 	conn, err := net.DialTCP("tcp4", nil, tcpAddr)
 	if err == nil {
 		defer conn.Close()
@@ -211,6 +213,7 @@ func getInfoFromZebra(ip, port string, retry int) string {
 	Info.Println(servAddr)
 
 	tcpAddr, err := net.ResolveTCPAddr("tcp", servAddr)
+	Warning.Println(err)
 	conn, err := net.DialTCP("tcp4", nil, tcpAddr)
 	if err == nil {
 		defer conn.Close()
