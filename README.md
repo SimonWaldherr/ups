@@ -2,7 +2,6 @@
 
 *a simple printing system for labels*  
 
-[![Build Status](https://travis-ci.org/SimonWaldherr/ups.svg?branch=master)](https://travis-ci.org/SimonWaldherr/ups) 
 [![GoDoc](https://godoc.org/github.com/SimonWaldherr/ups?status.svg)](https://godoc.org/github.com/SimonWaldherr/ups)  
 
 I wrote the [Uncommon Printing System](https://simonwaldherr.de/go/ups) a long time ago to replace a proprietary printing system called NiceWatch by [NiceLabel](https://www.nicelabel.com). 
@@ -51,12 +50,9 @@ but when it comes to actual W3C, WHATWG, IETF, ISO, … standards, they do not c
 
 ## But
 
-If you only need a tool to print images on a Label-printer you can use this tool:
+If you only need a tool to print images on a Label-printer you can use this tool:  
 [![SimonWaldherr/zplgfa - GitHub](https://gh-card.dev/repos/SimonWaldherr/zplgfa.svg?fullname)](https://github.com/SimonWaldherr/zplgfa)  
 
-## Is it any good?
-
-[Yes](https://news.ycombinator.com/item?id=3067434)
 
 ## License
 
