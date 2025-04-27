@@ -2,6 +2,7 @@
 
 *a simple printing system for labels*  
 
+[![DOI](https://zenodo.org/badge/153938980.svg)](https://doi.org/10.5281/zenodo.15291217) 
 [![GoDoc](https://godoc.org/github.com/SimonWaldherr/ups?status.svg)](https://godoc.org/github.com/SimonWaldherr/ups)  
 
 I wrote the [Uncommon Printing System](https://simonwaldherr.de/go/ups) a long time ago to replace a proprietary printing system called NiceWatch by [NiceLabel](https://www.nicelabel.com). 
